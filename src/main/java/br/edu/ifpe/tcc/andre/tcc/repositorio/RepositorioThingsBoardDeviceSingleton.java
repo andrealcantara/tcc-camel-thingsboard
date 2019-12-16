@@ -7,16 +7,34 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 
+import br.edu.ifpe.tcc.andre.tcc.exception.RepositoryOutOfBound;
 import br.edu.ifpe.tcc.andre.tcc.model.DeviceThingsboard;
+import br.edu.ifpe.tcc.andre.tcc.util.Utils;
 
 public class RepositorioThingsBoardDeviceSingleton {
+	
+	public static boolean contains(DeviceThingsboard device) {
+		return RepositorioThingsBoardDeviceSingletonHandler.HOLD.contains(device);
+	}
 	
 	public static List<DeviceThingsboard> getList() {
 		return ImmutableList.copyOf(RepositorioThingsBoardDeviceSingletonHandler.HOLD);
 	};
 
-	public static void save(DeviceThingsboard deviceTypeThingsboard) {
-		RepositorioThingsBoardDeviceSingletonHandler.HOLD.add(deviceTypeThingsboard);
+	public static void save(DeviceThingsboard device) {
+		RepositorioThingsBoardDeviceSingletonHandler.HOLD.add(device);
+	}
+	
+	public static boolean remove(DeviceThingsboard device) {
+		return RepositorioThingsBoardDeviceSingletonHandler.HOLD.remove(device);
+	}
+	
+	public static void update(DeviceThingsboard device) {
+		int index = RepositorioThingsBoardDeviceSingletonHandler.HOLD.indexOf(device);
+		if( index == -1) {
+			throw new RepositoryOutOfBound(String.format("Element %s not found.", Utils.objectToJson(device)));
+		}
+		RepositorioThingsBoardDeviceSingletonHandler.HOLD.set(index, device);
 	}
 
 	public static DeviceThingsboard getByName(String name) {

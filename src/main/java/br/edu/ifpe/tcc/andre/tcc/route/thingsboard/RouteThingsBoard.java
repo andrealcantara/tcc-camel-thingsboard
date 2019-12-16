@@ -17,9 +17,9 @@ import br.edu.ifpe.tcc.andre.tcc.process.ProcessException;
 public class RouteThingsBoard  extends RouteBuilder{
 
 	private static final String ROUTE_DEFAULT = "thingsboard";
-	private static final String ID_ROUTE = "ID-ROTA-" + ROUTE_DEFAULT;
-	public static final String ROUTE_NAME = "direct:rota-" + ROUTE_DEFAULT;
-	private static final String ID = "id-path-" + ROUTE_DEFAULT;
+	private static final String ID_ROUTE = "ID_ROTA_" + ROUTE_DEFAULT;
+	public static final String ROUTE_NAME = "direct:rota_" + ROUTE_DEFAULT;
+	private static final String ID = "id_path_" + ROUTE_DEFAULT;
 	
 	@Value("${thingsboard.base.path}")
 	private String baseThingsboardPath;
@@ -39,14 +39,14 @@ public class RouteThingsBoard  extends RouteBuilder{
 		    .removeHeader("*")
 			.process(processException)
 			.removeProperties("*")
-			.endRest();
+			.end();
 		
 		onException(Throwable.class)
 		    .handled(true)
 		    .removeHeader("*")
 			.process(processException)
 			.removeProperties("*")
-			.endRest();
+			.end();
 		
 		from(ROUTE_NAME).id(ID_ROUTE)
 		.setHeader(HttpHeaders.CONTENT_TYPE, constant(MediaType.APPLICATION_JSON))
@@ -54,7 +54,7 @@ public class RouteThingsBoard  extends RouteBuilder{
 		.process(processBodyThingsboard)
 		.marshal().json(JsonLibrary.Jackson)
 		.to("http4:"+ baseThingsboardPath + "/${property.chave}/telemetry").id(ID)
-		.endRest();
+		.end();
 		
 		
 		

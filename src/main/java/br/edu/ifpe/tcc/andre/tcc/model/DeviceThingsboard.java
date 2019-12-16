@@ -2,7 +2,13 @@ package br.edu.ifpe.tcc.andre.tcc.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+
+@JsonInclude(Include.NON_NULL)
 public class DeviceThingsboard {
+	
 	private String key;
 	private String name;
 
@@ -26,7 +32,7 @@ public class DeviceThingsboard {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(key);
+		return Objects.hash(name);
 	}
 	
 	@Override
@@ -40,6 +46,6 @@ public class DeviceThingsboard {
 		}
 		
 		DeviceThingsboard other = (DeviceThingsboard) obj;
-		return Objects.equals(key, other.key);
+		return Objects.equals(name, other.name);
 	}
 }

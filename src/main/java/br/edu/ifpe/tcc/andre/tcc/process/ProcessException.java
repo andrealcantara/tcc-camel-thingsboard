@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import br.edu.ifpe.tcc.andre.tcc.exception.IExceptionResponse;
 import br.edu.ifpe.tcc.andre.tcc.exception.ResponseModelException;
+import br.edu.ifpe.tcc.andre.tcc.util.Utils;
 
 @Component
 public class ProcessException implements Processor {
@@ -15,14 +16,15 @@ public class ProcessException implements Processor {
 	public void process(Exchange exchange) throws Exception {
 		Exception e = getException(exchange);
 		HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
-		String message = "Temporarily Unavailable. Try again later.";
+//		String message = "Temporarily Unavailable. Try again later.";
+		String message = e.getMessage();
 		if (e instanceof IExceptionResponse) {
 			status = ((IExceptionResponse) e).getStatus();
 			message = ((IExceptionResponse) e).localMessage();
 		}
 		
-		exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, status.toString());
-		exchange.getOut().setBody(new ResponseModelException(status.toString(), message));
+		exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, status.value());
+		exchange.getOut().setBody(Utils.objectToJson(new ResponseModelException(status.value()+"", message)));
 	}
 
 	private Exception getException(Exchange exchange) {

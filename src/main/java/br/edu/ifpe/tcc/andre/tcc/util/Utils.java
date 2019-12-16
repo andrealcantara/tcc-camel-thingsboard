@@ -21,8 +21,8 @@ public class Utils {
 	
 	public static <T> T jsonToObject(String json, Class<T> clazz) {
 		try {
-			return mapper.readValue(json, clazz);
-		} catch (IOException e) {
+			return mapper.convertValue(json, clazz);
+		} catch (Exception e) {
 			return null;
 		}
 	}

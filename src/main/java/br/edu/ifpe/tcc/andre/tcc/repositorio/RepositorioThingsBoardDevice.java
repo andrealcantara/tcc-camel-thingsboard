@@ -2,12 +2,12 @@ package br.edu.ifpe.tcc.andre.tcc.repositorio;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import br.edu.ifpe.tcc.andre.tcc.exception.RepositoryItemNotFound;
 import br.edu.ifpe.tcc.andre.tcc.model.DeviceThingsboard;
 
-@Component
+@Repository
 public class RepositorioThingsBoardDevice {
 
 	public DeviceThingsboard getByName(String name) {
@@ -18,15 +18,24 @@ public class RepositorioThingsBoardDevice {
 		return obj;
 	}
 	
-	public void save(DeviceThingsboard deviceTypeThingsboard) {
-		RepositorioThingsBoardDeviceSingleton.save(deviceTypeThingsboard);
+	public void save(DeviceThingsboard device) {
+		RepositorioThingsBoardDeviceSingleton.save(device);
 	}
 	
-	public void remove(DeviceThingsboard deviceTypeThingsboard) {
-		
+	public void removeByName(String name) {
+		DeviceThingsboard device = getByName(name);
+		RepositorioThingsBoardDeviceSingleton.remove(device);
 	}
 
+	public void update(DeviceThingsboard device) {
+		RepositorioThingsBoardDeviceSingleton.update(device);
+	}
+	
 	public List<DeviceThingsboard> getAllDevices() {
 		return RepositorioThingsBoardDeviceSingleton.getList();
+	}
+	
+	public boolean contains(DeviceThingsboard device) {
+		return RepositorioThingsBoardDeviceSingleton.contains(device);
 	}
 }
