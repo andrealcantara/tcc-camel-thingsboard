@@ -4,22 +4,29 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import br.edu.ifpe.tcc.andre.tcc.model.DeviceTypeThingsboard;
+import br.edu.ifpe.tcc.andre.tcc.exception.RepositoryItemNotFound;
+import br.edu.ifpe.tcc.andre.tcc.model.DeviceThingsboard;
 
 @Component
 public class RepositorioThingsBoardDevice {
 
-	private List<DeviceTypeThingsboard> devices;
-
-	public RepositorioThingsBoardDevice() {
-		this.devices = RepositorioThingsBoardDeviceSingleton.getSingleton();
+	public DeviceThingsboard getByName(String name) {
+		DeviceThingsboard obj = RepositorioThingsBoardDeviceSingleton.getByName(name);
+		if(obj == null) {
+			throw new RepositoryItemNotFound(String.format("Device %s not found.", name));
+		}
+		return obj;
 	}
 	
-	public void saveType(DeviceTypeThingsboard deviceTypeThingsboard) {
-		RepositorioThingsBoardDeviceSingleton.add(deviceTypeThingsboard);
+	public void save(DeviceThingsboard deviceTypeThingsboard) {
+		RepositorioThingsBoardDeviceSingleton.save(deviceTypeThingsboard);
+	}
+	
+	public void remove(DeviceThingsboard deviceTypeThingsboard) {
+		
 	}
 
-	public List<DeviceTypeThingsboard> getDevices() {
-		return devices;
+	public List<DeviceThingsboard> getAllDevices() {
+		return RepositorioThingsBoardDeviceSingleton.getList();
 	}
 }
