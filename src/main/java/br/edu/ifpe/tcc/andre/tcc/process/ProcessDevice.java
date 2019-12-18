@@ -9,13 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import br.edu.ifpe.tcc.andre.tcc.exception.CrudException;
 import br.edu.ifpe.tcc.andre.tcc.model.DefaultResponse;
 import br.edu.ifpe.tcc.andre.tcc.model.DeviceThingsboard;
 import br.edu.ifpe.tcc.andre.tcc.repositorio.RepositorioThingsBoardDevice;
-import br.edu.ifpe.tcc.andre.tcc.util.Utils;
 
 @Component
 public class ProcessDevice {
@@ -31,7 +28,7 @@ public class ProcessDevice {
 			}
 			repositoryDevice.save(device);
 			exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, HttpStatus.CREATED.value());
-			exchange.getIn().setBody(null);
+			exchange.getIn().setBody("");
 		};
 	}
 
@@ -41,7 +38,7 @@ public class ProcessDevice {
 			repositoryDevice.update(device);
 
 			exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, HttpStatus.OK.value());
-			exchange.getIn().setBody(null);
+			exchange.getIn().setBody("");
 		};
 	}
 
@@ -50,16 +47,16 @@ public class ProcessDevice {
 			String name = exchange.getIn().getHeader("device", String.class);
 			repositoryDevice.removeByName(name);
 			exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, HttpStatus.OK.value());
-			exchange.getIn().setBody(null);
+			exchange.getIn().setBody("");
 		};
 	}
 
 	public Processor processIsExist() {
 		return exchange -> {
-			String name = exchange.getIn().getHeader("device", String.class);
-			repositoryDevice.contains(new DeviceThingsboard(name, null));
+			String label = exchange.getIn().getHeader("device", String.class);
+			repositoryDevice.contains(new DeviceThingsboard(label, null, null));
 			exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, HttpStatus.OK.value());
-			exchange.getIn().setBody(null);
+			exchange.getIn().setBody("");
 		};
 	}
 
@@ -67,7 +64,7 @@ public class ProcessDevice {
 		return exchange -> {
 			List<String> devicesName = repositoryDevice.getAllDevices()
 													   .stream()
-													   .map(DeviceThingsboard::getName)
+													   .map(DeviceThingsboard::getLabel)
 													   .collect(Collectors.toList());
 			
 			exchange.getIn().setBody(new DefaultResponse<>(devicesName));

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.edu.ifpe.tcc.andre.tcc.process.ProcessDevice;
-import br.edu.ifpe.tcc.andre.tcc.process.ProcessException;
+import br.edu.ifpe.tcc.andre.tcc.route.exception.RouteProcessException;
 import br.edu.ifpe.tcc.andre.tcc.validation.ValidationDevice;
 
 @Component
@@ -21,22 +21,16 @@ public class RouteUpdateDevicesThingsBoard  extends RouteBuilder{
 	@Autowired
 	private ValidationDevice validationDevice;
 
-	@Autowired
-	private ProcessException processException;
-
 	@Override
 	public void configure() throws Exception {
 		
 		onException(Throwable.class)
 			.handled(true)
-		    .removeHeader("*")
-			.process(processException)
-			.removeProperties("*")
-			.end();
+			.to(RouteProcessException.ROUTE_NAME);
 		
 		from(ROUTE_NAME).routeId(ID_ROUTE)
 		.process(validationDevice)
 		.process(processDevice.processUpdate())
-		.end();
+		.end().endRest();
 	}
 }

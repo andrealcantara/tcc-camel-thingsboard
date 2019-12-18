@@ -7,5 +7,9 @@ public interface IExceptionResponse {
 	public HttpStatus getStatus();
 	
 	public String localMessage();
+	
+	default Object localDetail() {
+		return null;
+	}
 
 }

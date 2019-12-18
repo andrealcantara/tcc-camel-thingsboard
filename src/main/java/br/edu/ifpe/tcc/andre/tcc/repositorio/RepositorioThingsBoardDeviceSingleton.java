@@ -41,7 +41,7 @@ public class RepositorioThingsBoardDeviceSingleton {
 		DeviceThingsboard response = null;
 		
 		Optional<DeviceThingsboard> device = RepositorioThingsBoardDeviceSingletonHandler.HOLD.stream()
-				.filter(dev -> dev.getName().equals(name)).findFirst();
+				.filter(dev -> dev.getLabel().equals(name)).findFirst();
 		
 		if(device.isPresent()) {
 			response = device.get();
@@ -53,11 +53,11 @@ public class RepositorioThingsBoardDeviceSingleton {
 		public static List<DeviceThingsboard> HOLD;
 		static {
 			HOLD = Collections.synchronizedList(new ArrayList<DeviceThingsboard>());
-			HOLD.add(new DeviceThingsboard("Termometro-Lab51", "alkjsklasjd"));
-			HOLD.add(new DeviceThingsboard("Corrente-Lab51", "alkjsklasjd"));
-			HOLD.add(new DeviceThingsboard("Porta-Lab51", "alkjsklasjd"));
-			HOLD.add(new DeviceThingsboard("Lampada-Lab51", "alkjsklasjd"));
-			HOLD.add(new DeviceThingsboard("ArCondicionado-Lab51", "alkjsklasjd"));
+			HOLD.add(new DeviceThingsboard("Termometro-Lab51", "1qUKsOkyam3VW5o3xWH1", "TERMOMETRO"));
+			HOLD.add(new DeviceThingsboard("Corrente-Lab51", "xFpWFn2EMcH22b7uGJdq", "CORRENTE"));
+			HOLD.add(new DeviceThingsboard("Porta-Lab51", "x6fsvuLVXsAeSy61AkO0", "PORTA"));
+			HOLD.add(new DeviceThingsboard("Lampada-Lab51", "nXyDSR9gTiD9xeCw6yip", "LAMPADA"));
+			HOLD.add(new DeviceThingsboard("Tomadas-Lab51", "qPQ2ZtPBsj2CciRhecGZ", "TOMADA"));
 
 		}
 	}

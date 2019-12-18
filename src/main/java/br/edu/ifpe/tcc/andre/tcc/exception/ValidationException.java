@@ -1,11 +1,8 @@
 package br.edu.ifpe.tcc.andre.tcc.exception;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 
-import br.edu.ifpe.tcc.andre.tcc.util.Utils;
-import br.edu.ifpe.tcc.andre.tcc.validation.ValidationMessage;
+import br.edu.ifpe.tcc.andre.tcc.validation.model.ValidationMessages;
 
 public class ValidationException extends RuntimeException implements IExceptionResponse {
 
@@ -13,9 +10,9 @@ public class ValidationException extends RuntimeException implements IExceptionR
 
 	private final HttpStatus status;
 	
-	private final List<ValidationMessage> messages;
+	private final ValidationMessages messages;
 	
-	public ValidationException(String message, List<ValidationMessage> messages) {
+	public ValidationException(String message, ValidationMessages messages) {
 		super(message);
 		this.messages = messages;
 		this.status = HttpStatus.BAD_REQUEST;
@@ -28,10 +25,11 @@ public class ValidationException extends RuntimeException implements IExceptionR
 
 	@Override
 	public String localMessage() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(this.getMessage());
-		sb.append(", \"messages\":");
-		sb.append(Utils.objectToJson(messages));
-		return sb.toString();
+		return this.getMessage();
+	}
+	
+	@Override
+	public Object localDetail() {
+		return this.messages.getMessage();
 	}
 }

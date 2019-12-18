@@ -25,11 +25,13 @@ public class RestConfig  extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		  restConfiguration() // <1> Iniciar um bloco de configuração REST
-          .bindingMode(RestBindingMode.json) // <2> Vincula os objetos de entrada e saída como JSON
-          .apiContextPath("/api-doc") // <3> Definir o caminho para a definição de Swagger do serviço REST
-          .apiProperty("api.title",
-                  "Tcc");
+		  restConfiguration() 
+          .bindingMode(RestBindingMode.json) 
+          .apiContextPath("/api-doc") 
+          .apiProperty("api.title", "Projeto de TCC")
+		  .apiProperty("api.description", "Projeto de TCC - O camel consumir o thingsboard via api")
+		  .apiProperty("api.contact.name", "Andre Alcantara")
+		  .apiProperty("api.contact.email", "andrealcant@gmail.com");
 		  
 		  rest(PATH_DEFAULT)
 			  .description("Api para consumir o Thingboards")
@@ -38,19 +40,37 @@ public class RestConfig  extends RouteBuilder {
 	          .enableCORS(true)
 	          
 	          .post("/{device}/{value}").id(THINGSBOARD_ROUTE_PRINCIPAL).description("Envia um Valor ao Thingsboard")
+
+              .param().name("device").description("O campo label do device.").endParam()
+              .param().name("value").description("O valor que sera enviado para o device.").endParam()
+
+              .responseMessage().code(200).message("Envia um valor para a apí do thingsboard.").endResponseMessage()
+              .responseMessage().code(500).message("Problema 5xx normalmente de comunicacao.").endResponseMessage()
+              .responseMessage().code(400).message("Problema 400 são os parametros [device, value] invalidos.").endResponseMessage()
 	          .to(RouteThingsBoard.ROUTE_NAME)
 
 		  	  .post("/devices").id(THINGSBOARD_ROUTE_ADD_DEVICES).description("Adiciona um Device no camel")
           	  .type(DeviceThingsboard.class)
+              .responseMessage().code(200).message("Adiciona mais um device do thingsboard ao camel.").endResponseMessage()
+              .responseMessage().code(500).message("Problema 5xx normalmente de comunicacao.").endResponseMessage()
+              .responseMessage().code(400).message("Problema 400 é o body invalido.").endResponseMessage()
 		  	  .to(RouteAddDevicesThingsBoard.ROUTE_NAME)
 
           	  .patch("/devices").id(THINGSBOARD_ROUTE_UPDATE_DEVICES).description("Atualiza um Device no camel")
+              .responseMessage().code(200).message("Atualiza um device do thingsboard no camel.").endResponseMessage()
+              .responseMessage().code(500).message("Problema 5xx normalmente de comunicacao.").endResponseMessage()
+              .responseMessage().code(400).message("Problema 400 é o body invalido.").endResponseMessage()
+          	  .type(DeviceThingsboard.class)
           	  .to(RouteUpdateDevicesThingsBoard.ROUTE_NAME)
 
 		  	  .post("/devices/{device}").id(THINGSBOARD_ROUTE_REMOVE_DEVICES).description("Remove um Device no camel")
-	      	  .to(RouteRemoveDevicesThingsBoard.ROUTE_NAME)
+			  .responseMessage().code(200).message("Remove um valor de thinsboards device do camel.").endResponseMessage()
+			  .responseMessage().code(500).message("Problema 5xx normalmente de comunicacao.").endResponseMessage()
+			  .responseMessage().code(400).message("Problema 400 são os parametros device invalidos.").endResponseMessage()
+	          .to(RouteRemoveDevicesThingsBoard.ROUTE_NAME)
 
 	      	  .get("/devices").id(THINGSBOARD_ROUTE_LIST_DEVICES).description("Lista todos os Device no camel")
+	      	  .responseMessage().code(200).message("Lista todos os thinsboards device cadastrados no camel.").endResponseMessage()
 	      	  .to(RouteListDevicesThingsBoard.ROUTE_NAME);
 	}
 	

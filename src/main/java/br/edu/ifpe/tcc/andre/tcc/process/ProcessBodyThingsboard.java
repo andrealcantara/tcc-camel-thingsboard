@@ -1,7 +1,8 @@
 package br.edu.ifpe.tcc.andre.tcc.process;
 
 import static br.edu.ifpe.tcc.andre.tcc.util.ConstantValue.THINGSBOARD_KEY;
-import static br.edu.ifpe.tcc.andre.tcc.util.ConstantValue.THINGSBOARD_VALUE;
+
+import java.util.AbstractMap.SimpleEntry;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -24,7 +25,9 @@ public class ProcessBodyThingsboard implements Processor {
 
 		DeviceThingsboard device = devices.getByName(deviceName);
 
-		exchange.setProperty(THINGSBOARD_VALUE, value);
 		exchange.setProperty(THINGSBOARD_KEY, device.getKey());
+		
+		exchange.getIn().setBody(new SimpleEntry<String, String>(device.getName(), value));
+		
 	}
 }

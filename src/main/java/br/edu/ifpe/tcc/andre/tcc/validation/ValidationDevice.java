@@ -1,24 +1,22 @@
 package br.edu.ifpe.tcc.andre.tcc.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 
 import br.edu.ifpe.tcc.andre.tcc.exception.ValidationException;
 import br.edu.ifpe.tcc.andre.tcc.model.DeviceThingsboard;
-import br.edu.ifpe.tcc.andre.tcc.util.Utils;
+import br.edu.ifpe.tcc.andre.tcc.validation.model.ValidationMessage;
+import br.edu.ifpe.tcc.andre.tcc.validation.model.ValidationMessages;
 import io.hawt.util.Strings;
 
 @Component
 public class ValidationDevice implements Processor{
 
-	private List<ValidationMessage> messages;
+	private ValidationMessages messages;
 	
 	public ValidationDevice() {
-		messages = new ArrayList<>();
+		messages = new ValidationMessages("Body");
 	}
 	
 	@Override
@@ -27,16 +25,19 @@ public class ValidationDevice implements Processor{
 		DeviceThingsboard device = exchange.getIn().getBody(DeviceThingsboard.class);
 
 		if(device == null) {
-			messages.add(new ValidationMessage("body","Need a body with a fields: Name and Key"));
+			messages.addMensagem(new ValidationMessage(null,"Need a body with a fields: Name and Key"));
 		} else  {
-			if(Strings.isBlank(device.getName())) {
-				messages.add(new ValidationMessage("name"));
+			if(Strings.isBlank(device.getLabel())) {
+				messages.addMensagem(new ValidationMessage("label"));
 			}
 			if(Strings.isBlank(device.getKey())) {
-				messages.add(new ValidationMessage("key"));
+				messages.addMensagem(new ValidationMessage("key"));
+			}
+			if(Strings.isBlank(device.getName())) {
+				messages.addMensagem(new ValidationMessage("name"));
 			}
 		}
-		if(!messages.isEmpty()) {
+		if(messages.hasValidationMessage()) {
 			throw new ValidationException("Body not valid", messages);
 		}
 	}

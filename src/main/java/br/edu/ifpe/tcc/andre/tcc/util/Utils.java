@@ -1,7 +1,5 @@
 package br.edu.ifpe.tcc.andre.tcc.util;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
